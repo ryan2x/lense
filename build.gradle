@@ -1,0 +1,98 @@
+buildscript {
+    ext {
+        slf4jVersion = '1.7.21'
+        fasterxmlJacksonVersion = '2.8.9'
+        protobufVersion = '3.5.1'
+        protocVersion = '3.5.1'
+        grpcVersion = '1.18.0'
+        quickcheckVersion = '0.4'
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+apply plugin: 'com.google.protobuf'
+
+repositories {
+    mavenLocal()
+    maven {
+        url = 'https://repo1.maven.org/maven2'
+    }
+
+    maven {
+        url = 'http://github.com/tc/tc-maven-repo/raw/master/releases'
+    }
+}
+
+dependencies {
+    compile 'com.amazon:java-aws-mturk:1.2.2'
+    compile 'org.eclipse.jetty:jetty-server:9.3.3.v20150827'
+    compile 'org.eclipse.jetty:jetty-webapp:9.3.3.v20150827'
+    compile 'org.eclipse.jetty.websocket:websocket-server:9.3.3.v20150827'
+    compile 'com.github.keenon:loglinear:1.4.0'
+    // Protobuf
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: protobufVersion
+
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    compile 'org.junit.contrib:junit-theories:4.12'
+    compile 'org.codehaus.woodstox:wstx-asl:4.0.6'
+    // SLF4J
+    compile group: 'org.slf4j', name:'slf4j-api', version: slf4jVersion
+    compile group: 'org.slf4j', name:'slf4j-simple', version: slf4jVersion
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'com.pholser:junit-quickcheck-core:0.4-beta-3'
+    testCompile 'com.pholser:junit-quickcheck-generators:0.4-beta-3'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from(sourceSets.main.allJava)
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from(javadoc.destinationDir)
+}
+
+group = 'com.github.keenon'
+version = '1.2.18-SNAPSHOT'
+description = 'lense'
+sourceCompatibility = '1.8'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+            artifact(sourcesJar)
+            artifact(javadocJar)
+        }
+    }
+}
+
+// tell gradle to generate GRPC service code
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:${protocVersion}" }
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" }
+    }
+    generateProtoTasks {
+        all()*.plugins { grpc {} }
+    }
+}
+
+// Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
+
