@@ -3,3 +3,6 @@
  */
 
 rootProject.name = 'lense'
+
+include ':loglinear'
+project(":loglinear").projectDir = file ("../loglinear")

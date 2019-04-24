@@ -34,7 +34,8 @@ dependencies {
     compile 'org.eclipse.jetty:jetty-server:9.3.3.v20150827'
     compile 'org.eclipse.jetty:jetty-webapp:9.3.3.v20150827'
     compile 'org.eclipse.jetty.websocket:websocket-server:9.3.3.v20150827'
-    compile 'com.github.keenon:loglinear:1.4.0'
+//    compile 'com.github.keenon:loglinear:1.4.0'
+    compile project(":loglinear")
     // Protobuf
     compile group: 'com.google.protobuf', name: 'protobuf-java', version: protobufVersion
 
