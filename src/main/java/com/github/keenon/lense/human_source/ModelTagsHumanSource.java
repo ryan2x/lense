@@ -78,7 +78,12 @@ public class ModelTagsHumanSource extends HumanSource {
         for (int i = 0; i < model.getVariableSizes().length; i++) {
             max = Math.min(max, qr.getResponses(i).size());
         }
-        return max - jobsGivenOut.get(model).get();
+        if (jobsGivenOut.containsKey(model)) {
+            return max - jobsGivenOut.get(model).get();
+        }
+        else {
+            return max;
+        }
     }
 
     @Override

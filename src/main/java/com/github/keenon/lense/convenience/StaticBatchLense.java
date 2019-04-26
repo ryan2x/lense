@@ -203,6 +203,8 @@ public abstract class StaticBatchLense {
 
         ModelBatch batch;
 
+        log.info("BatchFileLocation {}", getBatchFileLocation());
+
         // Create a new batch if the file doesn't exist
         if (!f.exists()) {
             batch = createInitialModelBatch();
@@ -285,6 +287,12 @@ public abstract class StaticBatchLense {
         List<GameRecord> games = new ArrayList<>();
 
         Thread[] threads = new Thread[batch.size()];
+        if (parallelBatchIgnoreRetraining()) {
+            log.info("threads with batch size {}", batch.size());
+        }
+        else {
+            log.info("running batch size {}", batch.size());
+        }
 
         for (int i = 0; i < batch.size(); i++) {
             GraphicalModel model = batch.get(i);
@@ -304,7 +312,9 @@ public abstract class StaticBatchLense {
                     if (mqr.getResponses(j).size() < game.humansAvailableServerSide)
                         game.humansAvailableServerSide = mqr.getResponses(j).size();
                 }
-                log.info("Job postings allowed: " + game.humansAvailableServerSide);
+                if (game.humansAvailableServerSide>0) {
+                    log.info("Job postings allowed: " + game.humansAvailableServerSide);
+                }
             }
 
             if (parallelBatchIgnoreRetraining()) {
@@ -406,13 +416,17 @@ public abstract class StaticBatchLense {
                 }
         }
         else {
-            lenseWithRetraining.shutdown();
+            if (lenseWithRetraining!=null) {
+                log.info("lenseWithRetraining.shutdown");
+                lenseWithRetraining.shutdown();
+            }
         }
 
         running[0] = false;
         synchronized (writeSystemBlock) {
             writeSystemBlock.notifyAll();
         }
+        log.info("run finished");
     }
 
     public static class GameRecord {

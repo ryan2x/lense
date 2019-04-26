@@ -2,8 +2,9 @@ buildscript {
     ext {
         slf4jVersion = '1.7.21'
         fasterxmlJacksonVersion = '2.8.9'
-        protobufVersion = '3.5.1'
-        protocVersion = '3.5.1'
+        protobufVersion = '2.6.1'
+//        protocVersion = '3.5.1'
+        protocVersion = '2.6.1'
         grpcVersion = '1.18.0'
         quickcheckVersion = '0.4'
     }
@@ -34,21 +35,23 @@ dependencies {
     compile 'org.eclipse.jetty:jetty-server:9.3.3.v20150827'
     compile 'org.eclipse.jetty:jetty-webapp:9.3.3.v20150827'
     compile 'org.eclipse.jetty.websocket:websocket-server:9.3.3.v20150827'
-//    compile 'com.github.keenon:loglinear:1.4.0'
-    compile project(":loglinear")
+    compile 'com.github.keenon:loglinear:1.4.0'
+//    compile project(":loglinear")
     // Protobuf
     compile group: 'com.google.protobuf', name: 'protobuf-java', version: protobufVersion
 
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'org.junit.contrib:junit-theories:4.12'
     compile 'org.codehaus.woodstox:wstx-asl:4.0.6'
+    // Lombok
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
     // SLF4J
     compile group: 'org.slf4j', name:'slf4j-api', version: slf4jVersion
-    compile group: 'org.slf4j', name:'slf4j-simple', version: slf4jVersion
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile 'com.pholser:junit-quickcheck-core:0.4-beta-3'
     testCompile 'com.pholser:junit-quickcheck-generators:0.4-beta-3'
+    testCompile group: 'org.slf4j', name:'slf4j-simple', version: slf4jVersion
 }
 
 task sourcesJar(type: Jar) {
@@ -76,6 +79,7 @@ publishing {
     }
 }
 
+/*
 // tell gradle to generate GRPC service code
 protobuf {
     protoc { artifact = "com.google.protobuf:protoc:${protocVersion}" }
@@ -96,4 +100,11 @@ sourceSets {
         }
     }
 }
-
+*/
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/gen/java'
+        }
+    }
+}

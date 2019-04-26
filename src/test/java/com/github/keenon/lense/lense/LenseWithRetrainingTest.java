@@ -40,8 +40,14 @@ public class LenseWithRetrainingTest {
         assert(oldWeights != null);
         for (int i = 0; i < dataset.length; i++) {
             for (GraphicalModel.Factor f : dataset[i].factors) {
+//                if (f instanceof GraphicalModel.VectorFactor) {
+//                    GraphicalModel.VectorFactor vf = (GraphicalModel.VectorFactor) f;
+//                    for (int[] assn : vf.featuresTable) {
+//                        assert (vf.featuresTable.getAssignmentValue(assn) != null);
+//                    }
+//                }
                 for (int[] assn : f.featuresTable) {
-                    assert(f.featuresTable.getAssignmentValue(assn) != null);
+                    assert (f.featuresTable.getAssignmentValue(assn) != null);
                 }
             }
             l.getMAP(dataset[i], null);

@@ -414,6 +414,9 @@ public class GameTest {
             // Observe a few of the variables
 
             for (GraphicalModel.Factor f : model.factors) {
+//                if (f0 instanceof GraphicalModel.VectorFactor) {
+//                    GraphicalModel.VectorFactor f = (GraphicalModel.VectorFactor) f0;
+//                }
                 for (int i = 0; i < f.neigborIndices.length; i++) {
                     if (sourceOfRandomness.nextDouble() > 0.8) {
                         int obs = sourceOfRandomness.nextInt(f.featuresTable.getDimensions()[i]);

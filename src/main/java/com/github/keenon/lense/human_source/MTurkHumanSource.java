@@ -169,7 +169,12 @@ public class MTurkHumanSource extends HumanSource {
 
         @Override
         public void makeQuery(int variable, Consumer<Integer> response, Runnable failed) {
-            jobHandle.launchQuery(model.getVariableMetaDataByReference(variable).get(QUERY_JSON), response, failed);
+            Map<String, String> map1 = model.getVariableMetaDataByReference(variable);
+            if (map1==null) {
+                log.info("invalid model variableMetaData index {}", variable);
+                return;
+            }
+            jobHandle.launchQuery(map1.get(QUERY_JSON), response, failed);
         }
 
         @Override

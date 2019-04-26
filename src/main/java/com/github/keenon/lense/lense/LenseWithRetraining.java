@@ -9,6 +9,7 @@ import com.github.keenon.loglinear.model.ConcatVector;
 import com.github.keenon.loglinear.model.ConcatVectorNamespace;
 import com.github.keenon.loglinear.model.GraphicalModel;
 import com.github.keenon.lense.human_source.HumanSource;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.function.Function;
  * Handles running Lense, and a thread that learns new weights from Lense output whenever new classifications finish.
  * This is pretty basic stuff, but it's a very common case for Lense use.
  */
+@Slf4j
 public class LenseWithRetraining {
     Lense lense;
 
@@ -93,6 +95,7 @@ public class LenseWithRetraining {
         running = false;
         // Let the training thread wake up, so it can terminate
         synchronized (trainingSet) {
+//            log.info("LenseWithRetraining trainingSet.notifyAll");
             trainingSet.notifyAll();
         }
     }
